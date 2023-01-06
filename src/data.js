@@ -1,35 +1,76 @@
+const divContainer = document.getElementById('container')
 
 async function fetchData(url) {
     const response = await fetch(url);
-  
+
     if (response.ok) {
-      return response;
+        return response;
     }
     throw new Error(`Error:${response.status}`);
-  
-  }
-  
-  
-  async function createCountriesList() {
+}
+
+
+
+async function createCountriesList() {
     //const response= await fetch("https://date.nager.at/api/v3/CountryInfo/tr");
     //const response= await fetch("https://date.nager.at/api/v3/PublicHolidays/2023/tr");
     //const response= await fetch("https://date.nager.at/api/v3/NextPublicHolidaysWorldwide");
-  
-    const data = await fetchData("https://date.nager.at/api/v3/AvailableCountries")
-    const countriesArray = await data.json();
-    console.log(countriesArray);
-    const divContainer = document.getElementById('container')
-    const elementSelect = document.createElement('select')
-  
-    countriesArray.forEach(country => {
-      const elementOption = document.createElement('option')
-      elementOption.value = country.countryCode;
-      elementOption.textContent = country.name;
-  
-      elementSelect.appendChild(elementOption);
+
+    try {
+        const data = await fetchData("https://date.nager.at/api/v3/AvailableCountries")
+        const countriesArray = await data.json();
+        console.log(countriesArray);
+        
+        const elementSelect = document.createElement('select')
+
+        elementSelect.addEventListener('change', fetchPublicHolidays);
+
+        countriesArray.forEach(country => {
+            const elementOption = document.createElement('option')
+            elementOption.value = country.countryCode;
+            elementOption.textContent = country.name;
+
+            elementSelect.appendChild(elementOption);
+        });
+        divContainer.appendChild(elementSelect);
+
+    } catch (error) {
+        renderError(error);
+    }
+
+}
+function renderError(error) {
+    const h1Element = document.createElement('h1');
+    h1Element.textContent = error.message;
+    h1Element.style.color='red';
+    document.body.appendChild(h1Element);
+
+}
+async function fetchPublicHolidays(event) {
+    try {
+
+      const countryCode = event.target.value;
+      const year =  new Date().getFullYear();
+      const holidaysData = await fetchData(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`);
+      const holidays = await holidaysData.json();
+    holidays.forEach(holiday => {
+        const pElementName=document.createElement('p');
+        pElementName.textContent=`Name :${holiday.name}`;
+
+        const pElementDate=document.createElement('p');
+        pElementDate.textContent=`Date: ${holiday.date}`;
+
+
+        divContainer.appendChild(pElementName);
+        divContainer.appendChild(pElementDate);
+        document.body.appendChild(divContainer);
     });
-    divContainer.appendChild(elementSelect);
-  
+      
+      
+     
+    } catch (error) {
+      console.log(error.message);
+    }
   }
-  
-  createCountriesList()
+
+window.addEventListener('load', createCountriesList);
