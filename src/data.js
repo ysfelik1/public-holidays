@@ -7,31 +7,33 @@ async function fetchData(url) {
     throw new Error(`Error:${response.status}`);
 }
 
-async function createCountriesList() {
+async function fetchCountries() {
     try {
-        const divContainer = document.getElementById('container')
         const data = await fetchData("https://date.nager.at/api/v3/AvailableCountries")
-        const countriesArray = await data.json();
-        console.log(countriesArray);
-
-        const elementSelect = document.createElement('select')
-        const defaultOption = document.createElement('option')
-        defaultOption.textContent = "Choose a country"
-        elementSelect.appendChild(defaultOption);
-        elementSelect.addEventListener('change', fetchPublicHolidays)
-
-        countriesArray.forEach(country => {
-            const elementOption = document.createElement('option')
-            elementOption.value = country.countryCode;
-            elementOption.textContent = country.name;
-
-            elementSelect.appendChild(elementOption);
-        });
-        divContainer.appendChild(elementSelect);
+        const countries = await data.json();
+        createCountriesList(countries);
 
     } catch (error) {
         renderError(error);
     }
+}
+function createCountriesList(countries) {
+    const divContainer = document.getElementById('container')
+    const elementSelect = document.createElement('select')
+    const defaultOption = document.createElement('option')
+    defaultOption.textContent = "Choose a country"
+    elementSelect.appendChild(defaultOption);
+    
+    elementSelect.addEventListener('change', fetchPublicHolidays)
+
+    countries.forEach(country => {
+        const elementOption = document.createElement('option')
+        elementOption.value = country.countryCode;
+        elementOption.textContent = country.name;
+
+        elementSelect.appendChild(elementOption);
+    });
+    divContainer.appendChild(elementSelect);
 }
 
 function renderError(error) {
@@ -45,32 +47,36 @@ async function fetchPublicHolidays(event) {
     if (event.target.value != -1) {
         try {
             const countryCode = event.target.value;
-            const year = new Date().getFullYear();
-            const holidaysData = await fetchData(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`);
+            const currentYear = new Date().getFullYear();
+            const holidaysData = await fetchData(`https://date.nager.at/api/v3/PublicHolidays/${currentYear}/${countryCode}`);
             const holidays = await holidaysData.json();
-            const divContainer = document.getElementById('container');
-
-            const divHolidays = document.getElementById('holidays');
-            divHolidays.innerHTML = '<p>Here are holidays</p>'
-            holidays.forEach(holiday => {
-                const pElementName = document.createElement('p');
-                pElementName.textContent = `Name :${holiday.name}`;
-
-                const pElementDate = document.createElement('p');
-                pElementDate.textContent = `Date: ${holiday.date}`;
-
-                const divHolidayInfo = document.createElement('div');
-                divHolidayInfo.className = 'holiday';
-                divHolidayInfo.appendChild(pElementName);
-                divHolidayInfo.appendChild(pElementDate);
-                divHolidays.appendChild(divHolidayInfo)
-                divContainer.appendChild(divHolidays);
-                document.body.appendChild(divContainer);
-            });
+            createHolidaysList(holidays)
         } catch (error) {
-            console.log(error.message);
+            renderError(error);
         }
     }
 }
 
-window.addEventListener('load', createCountriesList);
+createHolidaysList(holidays)
+{
+    const divContainer = document.getElementById('container');
+    const divHolidays = document.getElementById('holidays');
+    divHolidays.innerHTML = '<p>Here are holidays</p>'
+
+    holidays.forEach(holiday => {
+        const pElementName = document.createElement('p');
+        pElementName.textContent = `Name :${holiday.name}`;
+        const pElementDate = document.createElement('p');
+        pElementDate.textContent = `Date: ${holiday.date}`;
+
+        const divHolidayInfo = document.createElement('div');
+        divHolidayInfo.className = 'holiday';
+        divHolidayInfo.appendChild(pElementName);
+        divHolidayInfo.appendChild(pElementDate);
+        divHolidays.appendChild(divHolidayInfo)
+        divContainer.appendChild(divHolidays);
+        document.body.appendChild(divContainer);
+    });
+}
+
+window.addEventListener('load', fetchCountries);
