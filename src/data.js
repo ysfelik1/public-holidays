@@ -65,10 +65,7 @@ function createYearList() {
 }
 
 function renderError(error) {
-    const h1Element = document.createElement('h1');
-    h1Element.textContent = error.message;
-    h1Element.style.color = 'red';
-    document.body.appendChild(h1Element);
+   alert(error.message)
 }
 
 async function fetchPublicHolidays(event) {
