@@ -6,9 +6,13 @@ body {
 h1 {
     color: #fff;
 }
-
+h2 {
+    color:  rgb(30, 78, 168);
+    margin-left: 1rem;
+}
 p {
     margin: 0.5rem 0.5rem;
+    font-size: 18px;
 }
 #selections{
     padding: 2rem;
@@ -54,7 +58,8 @@ select {
     background-image: url(images/12356.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-    min-height: 10rem;
+    height: 25vh;
+    min-height: 100px;
     background-position: center bottom;
     padding: 2rem;
 }
