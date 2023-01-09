@@ -1,29 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Public Holidays</title>
     <link rel="stylesheet" href="public/style.css" />
-</head>
-<body>
-    
+  </head>
+  <body>
     <div class="header">
-        <h1>Learn Worldwide All Public Holidays </h1> 
+      <h1>Learn Worldwide All Public Holidays</h1>
     </div>
-    
-  
-    <div id="container">
-       <div id="selections">
-        
-       </div>
-        <div id="holidays" >
+    <div>
+      <!-- Tab links -->
+      <div class="tab">
+        <button
+          class="tab-links"
+          onclick="openTab(event, 'container')"
+          id="defaultOpen"
+        >
+          Public Holidays
+        </button>
+        <button class="tab-links" onclick="openTab(event, 'upComing')">
+          Upcoming Public Holidays Worldwide
+        </button>
+        <button class="tab-links" onclick="openTab(event, 'isToday')">
+          Is Today Holiday
+        </button>
+      </div>
 
-        </div>
+      <!-- Tab content -->
+      <div id="container" class="tabcontent">
+        <div id="selections"></div>
+        <div id="holidays"></div>
+      </div>
+
+      <div id="upComing" class="tabcontent">
+        <p>Upcoming Public Holidays Worldwide</p>
+      </div>
+
+      <div id="isToday" class="tabcontent">
+        <p>Is Today Holiday</p>
+      </div>
     </div>
 
-    <script src="src/data.js">
-    </script>
-</body>
+    <script src="src/app.js"></script>
+    <script src="src/utils/openTabs.js"></script>
+  </body>
 </html>
