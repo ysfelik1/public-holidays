@@ -1,27 +1,27 @@
+
 async function fetchData(url) {
     const response = await fetch(url);
-
     if (response.ok) {
         return response;
     }
     throw new Error(`Error:${response.status}`);
 }
-
 async function fetchCountries() {
     try {
         const data = await fetchData("https://date.nager.at/api/v3/AvailableCountries")
         const countries = await data.json();
         createCountriesSelect(countries);
         createYearSelect();
-        fetchPublicHolidays()
+        fetchPublicHolidays();
+        fetchNextHolidays();
     } catch (error) {
         renderError(error);
         console.log(error);
     }
 }
+const divContainer = document.getElementById('container');
 function createCountriesSelect(countries) {
     try {
-
         const divSelects = document.getElementById('selections')
         const elementSelect = document.createElement('select')
         elementSelect.id = 'selectCountry'
@@ -36,13 +36,12 @@ function createCountriesSelect(countries) {
         });
         elementSelect.addEventListener('change', fetchPublicHolidays)
         divSelects.appendChild(elementSelect);
-
-        document.body.appendChild(divSelects);
+        divContainer.appendChild(divSelects)
+        document.body.appendChild(divContainer);
     } catch (error) {
         renderError(error);
         console.log(error)
     }
-
 }
 function createYearSelect() {
 
@@ -60,16 +59,14 @@ function createYearSelect() {
         counter++;
     }
     selectYear.selectedIndex = 100
-
     selectYear.addEventListener('change', fetchPublicHolidays)
     divSelects.appendChild(selectYear)
-    document.body.appendChild(divSelects)
+    divContainer.appendChild(divSelects);
+    document.body.appendChild(divContainer)
 }
-
 function renderError(error) {
     alert(error.message)
 }
-
 async function fetchPublicHolidays() {
     try {
         const year = document.getElementById('selectYear').value;
@@ -84,35 +81,34 @@ async function fetchPublicHolidays() {
         console.log(error)
     }
 }
-function createHolidaysList(holidays, countryName) {
+function createHolidaysList(holidays, explanationText) {
     try {
-        const divContainer = document.getElementById('container');
+       
         const divHolidays = document.getElementById('holidays');
         divHolidays.textContent = '';
-        
-        
+
         while (divHolidays.firstChild) {
             divHolidays.removeChild(divHolidays.firstChild);
-          }
-      
-          const h2element =document.createElement('h2');
-          h2element.textContent=`Here are holidays of ${countryName}`;
-          divHolidays.appendChild(h2element);
+        }
+        const h2element = document.createElement('h2');
+        h2element.textContent = `Here are holidays of ${explanationText}`;
+        divHolidays.appendChild(h2element);
 
-       
         holidays.forEach(holiday => {
+            const divHolidayInfo = document.createElement('div');
+
+        
             const pElementName = document.createElement('p');
             pElementName.textContent = `Name :${holiday.name}`;
             const pElementDate = document.createElement('p');
             pElementDate.textContent = `Date: ${holiday.date}`;
-
-            const divHolidayInfo = document.createElement('div');
+            
             divHolidayInfo.className = 'holiday';
+
             divHolidayInfo.appendChild(pElementName);
             divHolidayInfo.appendChild(pElementDate);
             divHolidays.appendChild(divHolidayInfo)
             divContainer.appendChild(divHolidays);
-            
         });
         document.body.appendChild(divContainer);
     } catch (error) {
@@ -120,5 +116,43 @@ function createHolidaysList(holidays, countryName) {
         console.log(error);
     }
 }
+function createUpcomingHolidaysList(holidays)
+{
+    const divHolidays = document.getElementById('upComing');
+    divHolidays.textContent = '';
 
+    while (divHolidays.firstChild) {
+        divHolidays.removeChild(divHolidays.firstChild);
+    }
+    holidays.forEach(holiday => {
+        const divHolidayInfo = document.createElement('div');
+
+        const pElementName = document.createElement('p');
+        pElementName.textContent = `Name :${holiday.name}`;
+        const pElementDate = document.createElement('p');
+        pElementDate.textContent = `Date: ${holiday.date}`;
+        const pElementCountry = document.createElement('p');
+        pElementCountry.textContent = `Country: ${holiday.countryCode}`;
+        
+        divHolidayInfo.className = 'holiday';
+
+        divHolidayInfo.appendChild(pElementName);
+        divHolidayInfo.appendChild(pElementDate);
+        divHolidayInfo.appendChild(pElementCountry);
+        divHolidays.appendChild(divHolidayInfo)
+        
+    });
+    document.body.appendChild(divHolidays);
+}
+
+async function fetchNextHolidays(){
+    try {
+        const nextHolidaysData = await fetchData('https://date.nager.at/api/v3/NextPublicHolidaysWorldwide');
+        const holidays = await nextHolidaysData.json();
+        createUpcomingHolidaysList(holidays);
+    } catch (error) {
+        renderError(error)
+        console.log(error)
+    }
+}
 window.addEventListener('load', fetchCountries);
