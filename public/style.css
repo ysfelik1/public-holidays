@@ -18,7 +18,7 @@ p {
 }
 
 #selections {
-    padding: 2rem;
+   
     display: flex;
     align-items: center;
     flex-wrap: wrap;
