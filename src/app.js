@@ -124,8 +124,14 @@ function createUpcomingHolidaysList(holidays)
     while (divHolidays.firstChild) {
         divHolidays.removeChild(divHolidays.firstChild);
     }
+    const h2element = document.createElement('h2');
+        h2element.textContent = `Here are next public holidays World wide`;
+        divHolidays.appendChild(h2element);
     holidays.forEach(holiday => {
         const divHolidayInfo = document.createElement('div');
+
+
+
 
         const pElementName = document.createElement('p');
         pElementName.textContent = `Name :${holiday.name}`;
