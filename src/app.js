@@ -6,10 +6,11 @@ async function fetchData(url) {
     }
     throw new Error(`Error:${response.status}`);
 }
+let  countries='';
 async function fetchCountries() {
     try {
         const data = await fetchData("https://date.nager.at/api/v3/AvailableCountries")
-        const countries = await data.json();
+         countries = await data.json();
         createCountriesSelect(countries);
         createYearSelect();
         fetchPublicHolidays();
@@ -22,6 +23,7 @@ async function fetchCountries() {
 const divContainer = document.getElementById('container');
 function createCountriesSelect(countries) {
     try {
+        const divIsToday = document.getElementById('isToday');
         const divSelects = document.getElementById('selections')
         const elementSelect = document.createElement('select')
         elementSelect.id = 'selectCountry'
@@ -120,6 +122,9 @@ function createHolidaysList(holidays, explanationText) {
 }
 function createUpcomingHolidaysList(holidays)
 {
+
+
+
     const divHolidays = document.getElementById('upComing');
     divHolidays.textContent = '';
 
@@ -134,19 +139,19 @@ function createUpcomingHolidaysList(holidays)
 
 
 
-
         const pElementName = document.createElement('p');
         pElementName.textContent = `Name :${holiday.name}`;
         const pElementDate = document.createElement('p');
         pElementDate.textContent = `Date: ${holiday.date}`;
         const pElementCountry = document.createElement('p');
-        pElementCountry.textContent = `Country: ${holiday.countryCode}`;
+        const country= countries.find(element => element.countryCode== holiday.countryCode );
+
+        pElementCountry.textContent = `Country: ${country.name}`;
         
         divHolidayInfo.className = 'holiday';
-
+        divHolidayInfo.appendChild(pElementCountry);
         divHolidayInfo.appendChild(pElementName);
         divHolidayInfo.appendChild(pElementDate);
-        divHolidayInfo.appendChild(pElementCountry);
         divHolidays.appendChild(divHolidayInfo)
         
     });
