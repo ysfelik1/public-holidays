@@ -40,6 +40,7 @@ function createCountriesSelect(countries) {
         document.body.appendChild(divContainer);
     } catch (error) {
         renderError(error);
+        console.log(error);
     }
 }
 function createYearSelect() {
