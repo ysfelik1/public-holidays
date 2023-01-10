@@ -15,6 +15,7 @@ async function fetchCountries() {
         createYearSelect();
         fetchPublicHolidays();
         fetchNextHolidays();
+        fetchIsTodayHoliday()
     } catch (error) {
         renderError(error);
         console.log(error);
@@ -168,4 +169,40 @@ async function fetchNextHolidays(){
         console.log(error)
     }
 }
+async function fetchIsTodayHoliday() {
+    try {
+       
+        const select = document.getElementById('selectCountry');
+        var clone = select.cloneNode(true);
+        clone.id = 'newSelect';
+        const divIsToday=document.getElementById('isToday');
+        const h2element=document.createElement('h2');
+
+        const data = await fetchData(`https://date.nager.at/api/v3/IsTodayPublicHoliday/${clone.value}?offset=0`);
+        if(data.status==200)
+        {
+            h2element.textContent='Today is a public holiday';
+           
+        }else{
+            h2element.textContent='Today is not public holiday';
+            h2element.style.color='red';
+        }
+       
+        clone.addEventListener('change', fetchIsTodayHoliday)
+        divIsToday.appendChild(clone);
+        divIsToday.appendChild(h2element);
+        if (divIsToday.childNodes.length > 3) {
+
+            for (let i = 0; i <2; i++) {
+                divIsToday.removeChild(divIsToday.childNodes[3]);
+            }
+        }
+        document.body.appendChild(divIsToday);
+        
+    } catch (error) {
+        renderError(error)
+        console.log(error)
+    }
+}
+
 window.addEventListener('load', fetchCountries);

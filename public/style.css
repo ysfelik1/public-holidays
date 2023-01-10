@@ -25,6 +25,12 @@ p {
     justify-content: center;
     gap: 1rem;
 }
+#isToday{
+   display: flex;
+   align-items:center ;
+   justify-content: center;
+   flex-direction: column;
+}
 
 .holiday {
     border-radius: 0.5rem;

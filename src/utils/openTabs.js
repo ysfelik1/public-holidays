@@ -1,6 +1,6 @@
- const openTab  = (evt, tabName) =>    {
+const openTab = (evt, tabName) => {
   // Declare all variables
-   
+
 
   // Get all elements with class="tabcontent" and hide them
   const tabContent = document.getElementsByClassName("tabcontent");
@@ -15,7 +15,12 @@
   }
 
   // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(tabName).style.display = "block";
+  if (tabName == `isToday`) {
+    document.getElementById(tabName).style.display = "flex";
+  }
+  else {
+    document.getElementById(tabName).style.display = "block";
+  }
   evt.currentTarget.className += " active";
 }
 document.getElementById("defaultOpen").click();
