@@ -1,4 +1,3 @@
-
 async function fetchData(url) {
     const response = await fetch(url);
     if (response.ok) {
@@ -18,7 +17,6 @@ async function fetchCountries() {
         fetchIsTodayHoliday()
     } catch (error) {
         renderError(error);
-        console.log(error);
     }
 }
 const divContainer = document.getElementById('container');
@@ -34,7 +32,6 @@ function createCountriesSelect(countries) {
             const elementOption = document.createElement('option')
             elementOption.value = country.countryCode;
             elementOption.textContent = country.name;
-
             elementSelect.appendChild(elementOption);
         });
         elementSelect.addEventListener('change', fetchPublicHolidays)
@@ -43,7 +40,6 @@ function createCountriesSelect(countries) {
         document.body.appendChild(divContainer);
     } catch (error) {
         renderError(error);
-        console.log(error)
     }
 }
 function createYearSelect() {
@@ -81,12 +77,10 @@ async function fetchPublicHolidays() {
         createHolidaysList(holidays, countryName)
     } catch (error) {
         renderError(error)
-        console.log(error)
     }
 }
 function createHolidaysList(holidays, explanationText) {
     try {
-       
         const divHolidays = document.getElementById('holidays');
         divHolidays.textContent = '';
 
@@ -97,11 +91,8 @@ function createHolidaysList(holidays, explanationText) {
         h2element.textContent = `Here are holidays of ${explanationText}`;
         divHolidays.appendChild(h2element);
 
-       
         holidays.forEach(holiday => {
             const divHolidayInfo = document.createElement('div');
-
-        
             const pElementName = document.createElement('p');
             pElementName.textContent = `Name :${holiday.name}`;
             const pElementDate = document.createElement('p');
@@ -118,14 +109,10 @@ function createHolidaysList(holidays, explanationText) {
         document.body.appendChild(divContainer);
     } catch (error) {
         renderError(error);
-        console.log(error);
     }
 }
 function createUpcomingHolidaysList(holidays)
 {
-
-
-
     const divHolidays = document.getElementById('upComing');
     divHolidays.textContent = '';
 
@@ -137,8 +124,6 @@ function createUpcomingHolidaysList(holidays)
         divHolidays.appendChild(h2element);
     holidays.forEach(holiday => {
         const divHolidayInfo = document.createElement('div');
-
-
 
         const pElementName = document.createElement('p');
         pElementName.textContent = `Name :${holiday.name}`;
@@ -166,7 +151,6 @@ async function fetchNextHolidays(){
         createUpcomingHolidaysList(holidays);
     } catch (error) {
         renderError(error)
-        console.log(error)
     }
 }
 async function fetchIsTodayHoliday() {
@@ -178,7 +162,7 @@ async function fetchIsTodayHoliday() {
         const divIsToday=document.getElementById('isToday');
         const h2element=document.createElement('h2');
 
-        const data = await fetchData(`https://date.nager.at/api/v3/IsTodayPublicHoliday/${clone.value}?offset=0`);
+        const data = await fetchData(`https://date.nager.at/api/v3/IsTodayPublicHoliday/${clone.value}?offset=1`);
         if(data.status==200)
         {
             h2element.textContent='Today is a public holiday';
@@ -201,7 +185,6 @@ async function fetchIsTodayHoliday() {
         
     } catch (error) {
         renderError(error)
-        console.log(error)
     }
 }
 
